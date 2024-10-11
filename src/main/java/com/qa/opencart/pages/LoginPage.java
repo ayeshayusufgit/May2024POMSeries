@@ -22,6 +22,7 @@ public class LoginPage {
 	private By forgotPasswordLink=By.linkText("Forgotten Password");
 	private By logo=By.cssSelector("img.img-responsive");
 	private By registerLink=By.linkText("Register");
+	private By naveen=By.cssSelector(".naveen");
 	
 	//2.public Page Constructors...
 	public LoginPage(WebDriver driver) {
