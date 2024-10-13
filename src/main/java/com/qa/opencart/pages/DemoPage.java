@@ -4,9 +4,10 @@ import org.openqa.selenium.By;
 
 public class DemoPage {
 
-	By loc=By.id("demo");
+	By loc=By.cssSelector(".demo");
 	
-	public void getPage() {
+	public int getPage() {
 		System.out.println("Click on Demo");
+		return 0;
 	}
 }
