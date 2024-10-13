@@ -1,4 +1,5 @@
 https://allurereport.org/docs/testng/ allure report installation
+https://allurereport.org/docs/how-it-works-environment-file/
 
 
 https://scoop.sh/
@@ -9,3 +10,9 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 To generate the reports
 allure serve allure-reports
+
+
+https://github.com/topics/login
+
+https://git-scm.com/download/win
+64-bit Git for Windows Setup.
