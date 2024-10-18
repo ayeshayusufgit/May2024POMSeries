@@ -2,9 +2,9 @@ package com.qa.opencart.pages;
 
 public class AppLogin {
 	
-	String name="Naveen";
+	String name="Veena";
 	
 	public void login() {
-		System.out.println("naveen--login");
+		System.out.println("Veena--login");
 	}
 }
