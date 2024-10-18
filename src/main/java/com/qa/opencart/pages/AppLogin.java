@@ -6,6 +6,5 @@ public class AppLogin {
 	
 	public void login() {
 		System.out.println("Veena--login");
-		double d=12.33;
 	}
 }
