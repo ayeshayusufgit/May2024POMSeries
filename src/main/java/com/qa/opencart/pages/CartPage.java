@@ -1,9 +1,10 @@
 package com.qa.opencart.pages;
 
+import org.openqa.selenium.WebDriver;
+
 public class CartPage {
 
-	public void cart() {
-		System.out.println("Veena--cart");
-		String name="Veena";
+	public CartPage(WebDriver driver) {
+		// TODO Auto-generated constructor stub
 	}
 }
