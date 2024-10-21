@@ -1,9 +1,0 @@
-package com.qa.opencart.pages;
-
-public class CartPage_a {
-	
-	public void cart() {
-		System.out.println("Veena--cart");
-		String name="veena";
-	}
-}
