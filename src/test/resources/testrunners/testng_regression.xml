@@ -9,8 +9,8 @@
 			class-name="com.qa.opencart.listeners.ExtentReportListener" />
 		<listener
 			class-name="com.qa.opencart.listeners.AllureListener" />
-	<!--	<listener
-			class-name="com.qa.opencart.listeners.AnnotationTransformer" /> -->
+		<listener
+			class-name="com.qa.opencart.listeners.AnnotationTransformer" />
 	</listeners>
 
 	<!--	<test name="Registration Page Test">
@@ -21,26 +21,26 @@
 	</test> -->
 
 	<test name="Login Page Test">
-		<parameter name="browser" value="firefox" />
+		<parameter name="browser" value="chrome" />
 		<classes>
 			<class name="com.qa.opencart.tests.LoginPageTest" />
 		</classes>
 	</test>
 
 	<test name="Accounts Page Test">
-		<parameter name="browser" value="edge" />
+		<parameter name="browser" value="firefox" />
 		<classes>
 			<class name="com.qa.opencart.tests.AccountsPageTest" />
 		</classes>
 	</test>
 
 
-	<!--	<test name="Product Info Page Test">
-		<parameter name="browser" value="safari" />
+	<test name="Product Info Page Test">
+		<parameter name="browser" value="edge" />
 			<classes>
 				<class name="com.qa.opencart.tests.ProductInfoPageTest2" />
 			</classes>
-		</test> -->
+		</test>
 
 	<!-- any thread can executed any test block, any dependency should be
 	avoided as it might be a problem -->
