@@ -159,6 +159,4 @@ public class DriverFactory {
 		return path;
 		//the path is returned as the ExtentReports use the ss path
 	}
-	
-	//https://mkyong.com/maven/how-to-install-maven-in-windows/
 }

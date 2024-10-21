@@ -38,7 +38,7 @@
 	<test name="Product Info Page Test">
 		<parameter name="browser" value="edge" />
 			<classes>
-				<class name="com.qa.opencart.tests.ProductInfoPageTest2" />
+				<class name="com.qa.opencart.tests.ProductInfoPageTest5" />
 			</classes>
 		</test>
 
