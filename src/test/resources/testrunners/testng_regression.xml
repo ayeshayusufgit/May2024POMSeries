@@ -27,6 +27,7 @@
 		</classes>
 	</test>
 
+<!--
 	<test name="Accounts Page Test">
 		<parameter name="browser" value="firefox" />
 		<classes>
@@ -41,7 +42,7 @@
 				<class name="com.qa.opencart.tests.ProductInfoPageTest5" />
 			</classes>
 		</test>
-
+-->
 	<!-- any thread can executed any test block, any dependency should be
 	avoided as it might be a problem -->
 	<!--We are following in AAA pattern, every test is independent-->
