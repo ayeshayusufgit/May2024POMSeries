@@ -62,15 +62,14 @@ public class LoginPageTest extends BaseTest {
 	public void logoExistsTest() {
 		Assert.assertTrue(loginPage.isLogoExist());
 	}
-
 	
 	@Severity(SeverityLevel.MINOR)
 	@Description("User is able to login")
 	@Test(priority = Integer.MAX_VALUE)
 	public void loginTest() {
-		//accountsPage=loginPage.doLogin(prop.getProperty("username"), prop.getProperty("password"));
-		accountsPage=loginPage.doLogin(prop.getProperty("username"), System.getProperty("password"));
-		//changing the password field from the config file to passing it as a String Parameter from jenkins
+		accountsPage=loginPage.doLogin(prop.getProperty("username"), prop.getProperty("password"));
+		//accountsPage=loginPage.doLogin(prop.getProperty("username"), System.getProperty("password"));
+		//changing the password field from the config file to passing it as a String Parameter from jenkins		
 		Assert.assertEquals(accountsPage.getAccountsPageTitle(), AppConstants.ACCOUNTS_PAGE_TITLE);
 	}
 	
