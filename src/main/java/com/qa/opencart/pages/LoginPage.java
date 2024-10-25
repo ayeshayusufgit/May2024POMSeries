@@ -56,7 +56,7 @@ public class LoginPage {
 		
 	@Step("Login with username:{0} and password:{1}")
 	public AccountsPage doLogin(String username,String password) {
-		System.out.println("credentials are:"+username+":"+password);
+		//System.out.println("credentials are:"+username+":"+password);
 		eleUtil.waitForElementVisible(firstname, AppConstants.DEFAULT_MEDIUM_TIME_OUT).sendKeys(username);
 		eleUtil.doSendKeys(pwd,password );
 		eleUtil.doClick(loginBtn);
