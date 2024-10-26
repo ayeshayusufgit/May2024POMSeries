@@ -23,3 +23,5 @@ https://stackoverflow.com/questions/12472645/how-do-i-schedule-jobs-in-jenkins
 H/2 * * * * -- every 2 minutes the job will be triggered
 H 8 * * * -- every day at 8 am the job will be triggered
 H 20 * * * -- every day at 8 pm the job will be triggered
+
+https://dashboard.ngrok.com/login
