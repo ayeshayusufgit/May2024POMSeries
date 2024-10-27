@@ -1,60 +1,99 @@
-pipeline{
-    
-    agent any
-    
-    stages{
-        stage("build"){
-            steps{
-                echo("Building the Project")
+pipeline { 
+agent any
+	tools{
+		maven 'maven'
+	} 
+	
+    stages { 
+        
+        stage ('Build') { 
+            
+            steps
+            {
+                git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+            post
+            {
+				success{
+					junit '**/target/surefire-reports/TEST-*.xml'
+					archiveArtifacts 'target/*.jar'
+				}	
+			}
+        }
+        
+       stage('Deploy to QA') {
+            steps {
+               	echo('deploy to QA') 
+                }
+       }
+            
+       stage('Regression Automation Tests'){
+			steps{
+				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
+					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
+					sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
+				}
+			}
+	   }        
+                
+        stage('Publish Allure Reports') {
+           steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: '/allure-results']]
+                    ])
+                }
             }
         }
         
-        stage("Running the Unit Tests"){
+        
+       stage('Publish Extent Report'){
             steps{
-                echo("Running the Unit Tests")
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: false, 
+                                  reportDir: 'build', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Regression Extent Report', 
+                                  reportTitles: ''])
             }
         }
         
-        stage("Running the Integration Tests"){
+       stage('Deploy to Stage') {
+            steps {
+               	echo('Deploy to Stage') 
+          }
+       }
+       
+       stage('Sanity Automation Tests'){
+			steps{
+				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
+					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
+					sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_sanity.xml"
+				}
+			}
+	   }
+	   
+	   stage('Publish Sanity Extent Report'){
             steps{
-                echo("Running the Integration Tests")
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: false, 
+                                  reportDir: 'build', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Sanity Extent Report', 
+                                  reportTitles: ''])
             }
         }
-        
-        stage("Deploy to Dev"){
-            steps{
-                echo("Deploy to Dev")
-            }
-        }
-        
-        stage("Deploy to QA"){
-            steps{
-                echo("Deploy to QA")
-            }
-        }
-        
-        stage("Running the Regression Testcases"){
-            steps{
-                echo("Running the Regression Testcases")
-            }
-        }
-        
-        stage("Deploy to Stage"){
-            steps{
-                echo("Deploy to Stage")
-            }
-        }
-        
-        stage("Running the Sanity testcases"){
-            steps{
-                echo("Running the Sanity testcases")
-            }
-        }
-        
-        stage("Deploy to Prod"){
-            steps{
-                echo("Deploy to Prod")
-            }
-        }
+        stage('Deploy to PROD') {
+            steps {
+               	echo('Deploy to PROD') 
+          }
+       }
     }
-}
+ }
