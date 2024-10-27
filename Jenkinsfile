@@ -1,13 +1,15 @@
-pipeline { 
-agent any
-	tools{
-		maven 'maven'
-	} 
+pipeline 
+{ 
+	agent any
 	
-    stages { 
-        
-        stage ('Build') { 
-            
+	tools{
+		maven 'Maven'
+		} 
+	
+    stages 
+    { 
+        stage ('Build') 
+        { 
             steps
             {
                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'
@@ -15,30 +17,35 @@ agent any
             }
             post
             {
-				success{
+				success
+				{
 					junit '**/target/surefire-reports/TEST-*.xml'
 					archiveArtifacts 'target/*.jar'
 				}	
 			}
         }
         
-       stage('Deploy to QA') {
-            steps {
+       stage('Deploy to QA')
+       {
+             steps 
+             {
                	echo('deploy to QA') 
-                }
+             }
        }
-            
-       stage('Regression Automation Tests'){
-			steps{
+       stage('Regression Automation Tests')
+       {
+			steps
+			{
 				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
 					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
 					sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
 				}
 			}
-	   }        
-                
-        stage('Publish Allure Reports') {
-           steps {
+	   }                     
+        stage('Publish Allure Reports') 
+        {
+           steps 
+           {
                 script {
                     allure([
                         includeProperties: false,
@@ -52,7 +59,8 @@ agent any
         }
         
         
-       stage('Publish Extent Report'){
+        stage('Publish Extent Report')
+        {
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
@@ -61,16 +69,16 @@ agent any
                                   reportFiles: 'TestExecutionReport.html', 
                                   reportName: 'HTML Regression Extent Report', 
                                   reportTitles: ''])
-            }
+                  }
         }
-        
-       stage('Deploy to Stage') {
+       stage('Deploy to Stage') 
+       {
             steps {
                	echo('Deploy to Stage') 
-          }
+           		 }
        }
-       
-       stage('Sanity Automation Tests'){
+       stage('Sanity Automation Tests')
+       {
 			steps{
 				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
 					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
@@ -78,8 +86,8 @@ agent any
 				}
 			}
 	   }
-	   
-	   stage('Publish Sanity Extent Report'){
+	   stage('Publish Sanity Extent Report')
+	   {
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
@@ -90,10 +98,11 @@ agent any
                                   reportTitles: ''])
             }
         }
-        stage('Deploy to PROD') {
+        stage('Deploy to PROD') 
+        {
             steps {
                	echo('Deploy to PROD') 
-          }
-       }
-    }
+                   }
+         }
+     }
  }
