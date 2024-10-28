@@ -32,20 +32,18 @@ pipeline
                	echo('deploy to QA') 
              }
        }
-       stage('Regression Automation Tests')
-       {
-			steps
-			{
-				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
+       
+       stage('Regression Automation Tests'){	
+		steps{
+				catchError(buildResult: 'SUCCESS' , stageResult: 'FAILURE'){
 					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
 					sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
 				}
 			}
-	   }                     
-        stage('Publish Allure Reports') 
-        {
-           steps 
-           {
+	   }
+	                        
+       stage('Publish Allure Report') {
+           steps {
                 script {
                     allure([
                         includeProperties: false,
@@ -58,27 +56,25 @@ pipeline
             }
         }
         
-        
-        stage('Publish Extent Report')
-        {
+        stage('Publish Extent Report'){
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
-                                  keepAll: false, 
-                                  reportDir: 'build', 
+                                  keepAll: true, 
+                                  reportDir: 'reports', 
                                   reportFiles: 'TestExecutionReport.html', 
                                   reportName: 'HTML Regression Extent Report', 
                                   reportTitles: ''])
-                  }
+        	}
         }
-       stage('Deploy to Stage') 
-       {
-            steps {
+        
+       stage('Deploy to Stage'){
+       		steps {
                	echo('Deploy to Stage') 
-           		 }
+           	}
        }
-       stage('Sanity Automation Tests')
-       {
+       
+       stage('Sanity Automation Tests'){
 			steps{
 				catchError(buildResult:'SUCCESS',stageResult: 'FAILURE'){
 					git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
@@ -86,23 +82,23 @@ pipeline
 				}
 			}
 	   }
-	   stage('Publish Sanity Extent Report')
-	   {
+	   
+	   stage('Publish Sanity Extent Report'){
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
-                                  keepAll: false, 
+                                  keepAll: true, 
                                   reportDir: 'build', 
                                   reportFiles: 'TestExecutionReport.html', 
                                   reportName: 'HTML Sanity Extent Report', 
                                   reportTitles: ''])
             }
         }
-        stage('Deploy to PROD') 
-        {
+        
+        stage('Deploy to PROD') {
             steps {
                	echo('Deploy to PROD') 
-                   }
+            	}
          }
      }
  }
