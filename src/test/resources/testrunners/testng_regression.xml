@@ -40,7 +40,7 @@
 			<classes>
 				<class name="com.qa.opencart.tests.ProductInfoPageTest5" />
 			</classes>
-		</test>
+	</test>
 		
 	<!-- any thread can executed any test block, any dependency should be
 	avoided as it might be a problem -->
