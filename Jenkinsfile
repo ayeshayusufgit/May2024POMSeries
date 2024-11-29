@@ -31,6 +31,16 @@ pipeline
             }
         }
         
+        /*stage('Run API Automation Tests'){
+            steps{
+                echo("Run API Automation Tests")
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/ayeshayusufgit/May2024ApiAutomation.git'
+                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
+                }
+            }
+        }*/
+        
                 
         stage('Regression UI Automation Tests') {
             steps {
@@ -41,7 +51,7 @@ pipeline
             }
         }
                 
-        stage('Publish Allure Reports') {
+        stage('Publish Regression Allure Report') {
            steps {
                 script {
                     allure([
@@ -56,7 +66,7 @@ pipeline
         }
         
         
-        stage('Publish Extent Report'){
+        stage('Publish Regression Extent Report'){
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
@@ -65,7 +75,7 @@ pipeline
                                   reportFiles: 'TestExecutionReport.html', 
                                   reportName: 'HTML Regression Extent Report', 
                                   reportTitles: ''])
-            }
+            } 
         }
         
         stage("Deploy to Stage"){
@@ -74,7 +84,7 @@ pipeline
             }
         }
         
-        stage('Sanity Automation Test') {
+        stage('Sanity UI Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
@@ -86,7 +96,7 @@ pipeline
         
         
         
-        stage('Publish sanity Extent Report'){
+        stage('Publish Sanity Extent Report'){
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 

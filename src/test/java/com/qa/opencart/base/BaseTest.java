@@ -38,9 +38,9 @@ public class BaseTest {
 	//All the methods of the Hard Assert are static thats why called by the class name
 
 	@Step("Setup with browser:{0} and init the properties file")
-	@Parameters({"browser"})
+	@Parameters({"browser","browserversion","testname"})
 	@BeforeTest 
-	public void setUp(@Optional("chrome") String browserName) {
+	public void setUp(@Optional("chrome") String browserName,String browserVersion,String testName) {
 		//@Optional : the default value of the browser is chrome
 		//if run from the @Test method then the BaseTest won't be able to get the value of browser from the testNG.xml
 		//So the @Optional parameter will give a default value of the browser ie chrome
@@ -55,6 +55,8 @@ public class BaseTest {
 			if(browserName!=null) {
 				prop.setProperty("browser", browserName);
 				//Dynamically the key "browser" is updated at runtime if there is a "browser" parameter being passed from testNG.xml
+				prop.setProperty("browserversion", browserVersion);
+				prop.setProperty("testname", testName);
 			}
 
 		driver=df.initDriver(prop);//call by reference

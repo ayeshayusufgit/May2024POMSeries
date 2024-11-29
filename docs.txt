@@ -25,3 +25,189 @@ H 8 * * * -- every day at 8 am the job will be triggered
 H 20 * * * -- every day at 8 pm the job will be triggered
 
 https://dashboard.ngrok.com/login
+==============================================================================================
+Jenkinfile
+
+pipeline 
+{
+    agent any ----- not using any special agent
+    
+    tools{
+        maven 'maven'  ----- the same name as the tool config in jenkins
+        }
+
+    stages 
+    {
+        stage('Build') 
+        {
+            steps
+            {
+                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'  
+                 //this is the DEV project fetched from git in its own workspace
+                 
+                 bat "mvn -Dmaven.test.failure.ignore=true clean package"  
+                 //the project has to be build, 
+                 //if there are any failure tcs then ignore it, continue to compile and create a jar 
+            }
+            //Once the above steps are successfully done then  do the following
+            post 
+            {
+                success
+                {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    //with the help of junit goto the target folder
+                    
+                    archiveArtifacts 'target/*.jar'
+                    //And get the jar from the target folder
+                }
+            }
+        } 
+        
+        stage("Deploy to QA"){
+            steps{
+                echo("deploy to qa")
+                //The DEV team will write some groovy script to deploy in QA
+            }
+        }
+        
+        stage('Run API Automation Tests'){
+        //THis stage can be added once the build is deployed to QA
+            steps{
+                echo("Run API Automation Tests")
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    
+                    git 'https://github.com/ayeshayusufgit/May2024ApiAutomation.git'
+                    //it will be referring to the api automation git repo
+                    
+                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
+                }
+            }
+        }
+        
+                
+        stage('Regression UI Automation Tests') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
+                    //The QA Automation code is fetched from git repo into the jnekins ws
+                    
+                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml"
+                	//compile the code start the execution of tcs using surefire plugin in pom.xml
+                	// the tcs will be the regression suite ie -> src/test/resources/testrunners/testng_regression.xm 
+                }
+            }
+        }
+                
+        stage('Publish Regression Allure Report') {
+           steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: '/allure-results']]
+                        //the allure report will be generated automatically in allure-result folder
+                    ])
+                }
+            }
+        }
+        
+        
+        stage('Publish Regression Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: true, 
+                                  
+                                  reportDir: 'reports',
+                                  //The Extent Report is coming in the reports directory
+                                   
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  //name of the Extent Report file
+                                  
+                                  reportName: 'HTML Regression Extent Report',
+                                  //name of the Extent Report title 
+                                  
+                                  reportTitles: ''])
+            } 
+        }
+        
+        stage("Deploy to Stage"){
+            steps{
+                echo("deploy to Stage")
+                //The DEVs write the script in this stage, as its out of scope for us
+            }
+        }
+        
+        stage('Sanity UI Automation Test') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/ayeshayusufgit/May2024POMSeries.git'
+                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_sanity.xml -Denv=stage"
+                    
+                    //compile the code start the execution of tcs from pom.xml
+                	//The tcs will be the sanity suite ie -> src/test/resources/testrunners/testng_sanity.xml
+                	//In windows the sh should be replaced by bat 
+                }
+                
+            }
+        }
+        
+        
+        
+        stage('Publish Sanity Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: true, 
+                                  reportDir: 'reports', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Sanity Extent Report', 
+                                  reportTitles: ''])
+            }
+            //This is for publishing the Extend Report of the Sanity TCs 
+        }
+        
+                
+        
+        stage("Deploy to PROD"){
+            steps{
+                echo("Deploy to PROD")
+            }
+        }       
+    }
+}
+=========================================
+for cron jobs
+crontab.guru
+=========================================
+https://github.com/SeleniumHQ/docker-selenium
+https://github.com/SeleniumHQ/docker-selenium/blob/trunk/docker-compose-v3-full-grid.yml
+=========================================
+https://app.docker.com/
+=========================================
+C:\Ayesha\Docker_Grid\Docker_Grid_2024>docker-compose up -d
+(on doing a docker compose up the below warning can be ignored)
+time="2024-11-22T20:49:53+05:30" level=warning msg="The \"PWD\" variable is not set. Defaulting to a blank string."
+time="2024-11-22T20:49:53+05:30" level=warning msg="networks.selenoid: external.name is deprecated. Please set name and external: true"
+====================
+C:\Ayesha\selenium_jars\jenkins\2.462.3>java -Dhudson.model.DirectoryBrowserSupport.CSP="" -jar jenkins.war --httpPort=9090
+
+https://stackoverflow.com/questions/32565275/cant-find-config-xml-anywhere-within-jenkins-folder
+https://www.geeksforgeeks.org/what-is-the-default-jenkins-password/
+==================================
+ngrok.yml
+
+version: 3
+agent:
+    authtoken: 1nW2LBrxkvybBosyrjvIeldd2U3_65m5N9QhERbvLos6HDV7r
+=====
+https://stackoverflow.com/questions/47854463/docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socke
+
+copy content from ms word in windows to vi editor in linux wo spaces
+:set paste
+copy 
+:set no paste(after copying)
+============================
+https://medium.com/codex/getting-started-with-aerokube-selenoid-on-amazon-aws-linux-416901bd2fe
