@@ -203,11 +203,18 @@ version: 3
 agent:
     authtoken: 1nW2LBrxkvybBosyrjvIeldd2U3_65m5N9QhERbvLos6HDV7r
 =====
-https://stackoverflow.com/questions/47854463/docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socke
-
 copy content from ms word in windows to vi editor in linux wo spaces
 :set paste
 copy 
 :set no paste(after copying)
 ============================
 https://medium.com/codex/getting-started-with-aerokube-selenoid-on-amazon-aws-linux-416901bd2fe
+https://devopslite.medium.com/how-to-install-selenoid-with-docker-compose-d4155038a6be
+https://stackoverflow.com/questions/47854463/docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socke
+============================
+nexus
+username:		admin
+password:	2f03f178-feea-4eaa-9c3b-bcf3dda922e9(temporary)/test123
+============================
+https://stackoverflow.com/questions/38898703/how-to-configure-pom-xml-file-to-use-nexus-repository-manager
+https://hub.docker.com/r/sonatype/nexus

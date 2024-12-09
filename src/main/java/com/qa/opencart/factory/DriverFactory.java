@@ -21,6 +21,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import com.qa.opencart.errors.AppError;
 import com.qa.opencart.exceptions.BrowserException;
 import com.qa.opencart.exceptions.FrameworkException;
+import com.qa.opencart.logger.Log;
 
 import io.qameta.allure.Step;
 
@@ -46,7 +47,11 @@ public class DriverFactory {
 		//initDriver(browserName,url......)
 		
 		String browserName=prop.getProperty("browser");
-		System.out.println("Browser name is:" + browserName);
+		//System.out.println("Browser name is:" + browserName); replacing the sops with log
+		
+		Log.info(prop.getProperty("testname") + " and browser name is : " + browserName);
+		//prop.getProperty("testname") ie is the testname will be coming from testNG
+		
 		
 		isHighlight = prop.getProperty("highlight");
 		System.out.println("Highlight is:" + isHighlight);
@@ -93,7 +98,9 @@ public class DriverFactory {
 			tlDriver.set(new SafariDriver());
 			break;
 		default:
-			System.out.println(AppError.INVALID_BROWSER_MESSAGE+browserName);
+			//System.out.println(AppError.INVALID_BROWSER_MESSAGE+browserName+" is invalid"); 
+			//replacing the SOPs with logs
+			Log.error(AppError.INVALID_BROWSER_MESSAGE+browserName+" is invalid");
 			throw new BrowserException(AppError.INVALID_BROWSER_MESSAGE+browserName);
 		}
 		//driver.manage().window().maximize();
@@ -107,7 +114,11 @@ public class DriverFactory {
 	}
 	
 	private void initRemoteDriver(String browserName) {
-		System.out.println("Running the tcs on Grid with browser"+browserName);
+		//System.out.println("Running the tcs on Grid with browser"+browserName);
+		//replacing the SOPs with logs
+		
+		Log.info("Running the test on grid with browser: "+ browserName);
+		
 		try {
 		switch(browserName.toLowerCase().trim()) {
 		
@@ -120,7 +131,10 @@ public class DriverFactory {
 		case "edge":tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("hubUrl")),optionsManager.getEdgeOptions()));
 					break;
 					
-		default:	System.out.println("Please pass the right remote browser name...");
+		default:	//System.out.println(AppError.INVALID_BROWSER_MESSAGE+browserName+" is invalid");
+					//replacing the SOPs with logs
+					
+					Log.error(AppError.INVALID_BROWSER_MESSAGE+browserName+" is invalid");
 					throw new BrowserException(AppError.INVALID_BROWSER_MESSAGE);
 				}
 		}catch(MalformedURLException e){
@@ -147,13 +161,24 @@ public class DriverFactory {
 		FileInputStream fis=null;
 		
 		String envName=System.getProperty("env");
-		System.out.println("Running tests on env:"+envName);
+		
+		//System.out.println("Running tests on env:"+envName); 
+		//replacing the SOPs with logs
+		
+		Log.info("Running tests on env:"+envName);
+		
 		try {
 			if(envName==null) {
 			//if no "envName" is passed then we assume that the tests have to executed on the QA environment
-			System.out.println("if env is null....hence running the tests on the QA environment:"+envName);
+			
+			//System.out.println("env is null....hence running the tests on the QA environment:"+envName);
+			//replacing the SOPs with logs
+			
+			Log.warn("env is null....hence running the tests on the QA env");
+				
 			fis=new FileInputStream("./src/test/resources/config/qa.config.properties");
 			//This makes connection with the file(config.properties) which is being read
+			
 			}else {
 				switch(envName.toLowerCase().trim()) {
 					case "qa": fis=new FileInputStream("./src/test/resources/config/qa.config.properties");
@@ -166,7 +191,9 @@ public class DriverFactory {
 								break;
 					case "prod": fis=new FileInputStream("./src/test/resources/config/config.properties");		
 								break;	
-					default:System.out.println("Please pass the right environment name:"+envName);
+					default://System.out.println("Please pass the right environment name:"+envName);
+							//replacing the SOPs with logs
+						Log.error("Please pass the right environment name....."+envName);
 						throw new FrameworkException("INVALID ENVIRONMENT NAME...");
 				}
 			}	
